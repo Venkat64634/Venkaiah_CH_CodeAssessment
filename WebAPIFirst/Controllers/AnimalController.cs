@@ -10,11 +10,9 @@ namespace WebAPI1.Controllers
     public class AnimalController : ControllerBase
     {
         public IAnimalService _animalService;
-        //private readonly IHttpContextAccessor _httpContextAccessor; , IHttpContextAccessor httpContextAccessor
         public AnimalController(IAnimalService animalService)
         {
             _animalService = animalService;
-            //_httpContextAccessor = httpContextAccessor;
         }
 
         [ProducesResponseType(typeof(AnimalInfo), StatusCodes.Status200OK)]
