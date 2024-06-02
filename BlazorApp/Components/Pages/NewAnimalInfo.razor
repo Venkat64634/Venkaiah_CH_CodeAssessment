@@ -1,0 +1,59 @@
+﻿@page "/newanimalinfo"
+@rendermode InteractiveServer
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>Add New Record</PageTitle>
+
+<form>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add New Animal Info</h5>
+            <div class="form-group row">
+                <label for="id" class="col-sm-2 col-form-label">Id</label>
+                <div class="col-sm-6">
+                    <input @bind="animalInfo.Id" type="number" class="form-control" id="id" placeholder="Id" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-6">
+                    <input @bind="animalInfo.Name" type="text" class="form-control" id="name" placeholder="Name" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="age" class="col-sm-2 col-form-label">Age</label>
+                <div class="col-sm-6">
+                    <input type="number" class="form-control" id="age" placeholder="Age" @bind="animalInfo.Age" />
+                </div>
+            </div>
+        
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <button type="button" @onclick="SaveNewAnimalInfoAsync" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    private Entities.AnimalInfo animalInfo { get; set; } = new Entities.AnimalInfo();
+
+
+    public async Task SaveNewAnimalInfoAsync()
+    {
+        try
+        {
+            var requestUri = new Uri("https://localhost:7295/api/Animal/SaveAnimalInfo");
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(requestUri, animalInfo);
+
+            NavigationManager.NavigateTo("/animalInfo");
+        }
+        catch (HttpRequestException ex)
+        {
+            // Handle exception
+        }
+    }
+}

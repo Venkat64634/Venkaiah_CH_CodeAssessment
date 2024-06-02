@@ -1,0 +1,59 @@
+﻿@page "/newvehicles"
+@rendermode InteractiveServer
+@inject HttpClient httpClient
+@inject NavigationManager NavigationManager
+
+<PageTitle>Add New Vehicle</PageTitle>
+
+<form>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Add New Vehicle</h5>
+            <div class="form-group row">
+                <label for="id" class="col-sm-2 col-form-label">Id</label>
+                <div class="col-sm-6">
+                    <input @bind="vehicle.Id" type="number" class="form-control" id="id" placeholder="Id" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="name" class="col-sm-2 col-form-label">Name</label>
+                <div class="col-sm-6">
+                    <input @bind="vehicle.Name" type="text" class="form-control" id="name" placeholder="Name" />
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="price" class="col-sm-2 col-form-label">Price</label>
+                <div class="col-sm-6">
+                    <input type="number" class="form-control" id="price" placeholder="Price" @bind="vehicle.Price" />
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-6">
+                    <button type="button" @onclick="AddNewVehicleAsync" class="btn btn-primary">Add</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+@code {
+
+    private Entities.Vehicle vehicle { get; set; } = new Entities.Vehicle() { };
+
+
+    public async Task AddNewVehicleAsync()
+    {
+        try
+        {
+            var requestUri = new Uri("https://localhost:7052/api/Vehicle/SaveVehicle");
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(requestUri, vehicle);
+
+            NavigationManager.NavigateTo("/vehicles");
+        }
+        catch (HttpRequestException ex)
+        {
+            // Handle exception
+        }
+    }
+}

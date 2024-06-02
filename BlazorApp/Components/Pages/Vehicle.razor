@@ -1,0 +1,52 @@
+﻿@page "/vehicles"
+@rendermode InteractiveServer
+@using System.Net.Http.Json
+@inject HttpClient httpClient
+
+<h3>Vehicle List</h3>
+
+<NavLink class="nav-link btn btn-default" href="/newvehicles">Add New Vehicle</NavLink>
+
+<hr />
+
+@if (_vehicles == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <table class="col-sm-12">
+        <thead class="col-sm-11">
+            <tr>
+                <th class="col-sm-3">Id</th>
+                <th class="col-sm-3">Name</th>
+                <th class="col-sm-3">Price</th>
+            </tr>
+        </thead>
+        <tbody class="col-sm-11">
+            @foreach (var vehicle in _vehicles)
+            {
+                <tr>
+                    <td class="col-sm-3">@vehicle.Id</td>
+                    <td class="col-sm-3">@vehicle.Name</td>
+                    <td class="col-sm-3">@vehicle.Price</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<Entities.Vehicle> _vehicles = new List<Entities.Vehicle>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var httpRequestMessage = new HttpRequestMessage()
+            {
+                Method = new HttpMethod("GET"),
+                RequestUri = new Uri("https://localhost:7052/api/Vehicle/GetAllVehicles"),
+            };
+
+        _vehicles = await httpClient.GetFromJsonAsync<List<Entities.Vehicle>>(httpRequestMessage.RequestUri);
+    }
+}
